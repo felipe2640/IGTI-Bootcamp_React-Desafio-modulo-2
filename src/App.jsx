@@ -24,7 +24,7 @@ export default function App() {
     return <p>Carregando...</p>;
   }
 
-  function handleCitySelected(citySelected, election) {
+  function handleCitySelected(citySelected) {
     setCity(citySelected);
   }
 

@@ -339,10 +339,7 @@ async function apiGetElection() {
         const candidate = candidates.candidates[0].name;
         const usercandidate = candidates.candidates[0].username;
         const vote = candidates.votes;
-        const percent = (
-          (candidates.votes / item.votingPopulation) *
-          100
-        ).toFixed(2);
+        const percent = ((candidates.votes / item.presence) * 100).toFixed(2);
         return { candidate, usercandidate, vote, percent };
       }),
     };
