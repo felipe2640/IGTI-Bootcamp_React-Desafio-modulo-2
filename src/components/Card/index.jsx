@@ -1,29 +1,54 @@
 import React from "react";
+import { ColorValue } from "../ColorValue";
+import { Winner } from "../Winner";
+export default function Card({ props, data = [], city = "" }) {
+  data = data.filter((data) => data.name === city)[0];
+  const election = !data ? "" : data.election;
 
-export default function Card() {
   return (
-    <div
-      className={`shadow-lg p-4 w-64 h-64 rounded-xl 
+    <>
+      {!data
+        ? ""
+        : election.map(({ candidate, percent, usercandidate, vote }) => {
+            return (
+              <div
+                key={candidate}
+                className="flex flex-row items-center justify-center "
+              >
+                <div
+                  className={`shadow-lg p-4 m-2 w-64 h-64 rounded-xl 
                     flex flex-col items-center space-y-10
                     font-semibold text-xl`}
-    >
-      <div className="flex flex-row space-x-8">
-        <img
-          className="w-24 h-24 rounded-full  "
-          src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=4&w=256&h=256&q=80"
-          alt=""
-          width="384"
-          height="512"
-        />
-        <div className="flex flex-col items-center">
-          <span>45,68%</span>
-          <p className="text-sm ...">455.456 votos</p>
-        </div>
-      </div>
-      <div className="flex flex-col items-center justify-center">
-        <strong>Andrew Alfred</strong>
-        <p> Winner</p>
-      </div>
-    </div>
+                >
+                  <div className="flex flex-row space-x-8">
+                    <img
+                      className="w-24 h-24 rounded-full  "
+                      src={`./img/${usercandidate}.png`}
+                      alt=""
+                      width="384"
+                      height="512"
+                    />
+                    <div className="flex flex-col items-center">
+                      <ColorValue
+                        value={!data ? 0 : data.election[0].percent}
+                        valuet={percent}
+                      />
+                      <p className="text-sm ...">{`${vote.toLocaleString(
+                        "pt-BR"
+                      )} votos`}</p>
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-center justify-center">
+                    <strong>{candidate}</strong>
+                    <Winner
+                      value={!data ? 0 : data.election[0].percent}
+                      valuet={percent}
+                    />
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+    </>
   );
 }

@@ -1,4 +1,6 @@
-export const Data = [
+import axiosModule from "axios";
+
+const Data = [
   {
     cities: [
       {
@@ -54,7 +56,7 @@ export const Data = [
         username: "superman",
       },
       {
-        id: "1f7954dc-c31c-4f29-8046-bb86ea96fb31",
+        id: "1f7954dc-c31c-4f29-8046-bb86ea96data={election} city={city}fb31",
         name: "CaptainMarvel",
         username: "captainmarvel",
       },
@@ -294,3 +296,59 @@ export const Data = [
     ],
   },
 ];
+
+const axios = axiosModule.create({ baseURL: "http://localhost:3001" });
+
+async function apiGetElection() {
+  const [{ data: cities }, { data: candidates }, { data: election }] =
+    await Promise.all([
+      axios.get("/cities"),
+      axios.get("/candidates"),
+      axios.get("/election"),
+    ]);
+  let result = cities
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map((city) => {
+      return {
+        ...city,
+        election: election
+          .filter((report) => {
+            return city.id === report.cityId;
+          })
+          .sort((a, b) =>
+            parseFloat(a.votes) > parseFloat(b.votes)
+              ? -1
+              : parseFloat(a.votes) < parseFloat(b.votes)
+              ? 1
+              : 0
+          )
+          .map((candida) => {
+            return {
+              ...candida,
+              candidates: candidates.filter((report) => {
+                return candida.candidateId === report.id;
+              }),
+            };
+          }),
+      };
+    });
+  result = result.map((item) => {
+    return {
+      ...item,
+      election: item.election.map((candidates) => {
+        const candidate = candidates.candidates[0].name;
+        const usercandidate = candidates.candidates[0].username;
+        const vote = candidates.votes;
+        const percent = (
+          (candidates.votes / item.votingPopulation) *
+          100
+        ).toFixed(2);
+        return { candidate, usercandidate, vote, percent };
+      }),
+    };
+  });
+
+  return result;
+}
+
+export { apiGetElection, Data };

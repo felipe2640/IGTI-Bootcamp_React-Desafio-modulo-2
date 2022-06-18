@@ -28,9 +28,9 @@ const SelectInput = ({
         type="text"
         onChange={handleInputChange}
       >
-        {inputOption.map((data) => {
+        {inputOption.map((data, id) => {
           return (
-            <option key={data.name} value={data.name}>
+            <option key={id} value={data.name}>
               {data.name}
             </option>
           );
